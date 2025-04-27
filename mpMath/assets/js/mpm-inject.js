@@ -23,6 +23,15 @@ var readyStateCheckInterval = setInterval(function() {
                         let end = event.data.text.lastIndexOf('<') - 1;
                         editing.innerHTML = event.data.text.substring(beg, end);
                         editingMode = false; // 还原为非编辑模式
+                    } else if(typeof window.__MP_Editor_JSAPI__ !== 'undefined') {
+                        window.__MP_Editor_JSAPI__.invoke({
+                            apiName: 'mp_editor_insert_html',   
+                            apiParam: {
+                                html: '\xA0' + event.data.text + '\xA0'
+                            },
+                            sucCb: (res) => {console.log('设置成功', res)},  
+                            errCb: (err) => {console.log('设置失败', err)}  
+                        });
                     } else {
                         window.UE.getEditor('js_editor').execCommand('insertHTML', '\xA0' + event.data.text + '\xA0');
                     }
